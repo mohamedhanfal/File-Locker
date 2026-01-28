@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "cli.h"
+#include "file_io.h"
 
 int main(int argc, char **argv) {
     CliArgs args;
@@ -16,16 +17,20 @@ int main(int argc, char **argv) {
     }
 
     if (args.cmd == CMD_PACK) {
-        printf("PACK (not implemented yet)\n");
-        printf("  input : %s\n", args.input_path);
-        printf("  output: %s\n", args.output_path);
+        if (!copy_file_binary(args.input_path, args.output_path)) {
+            fprintf(stderr, "PACK failed: could not write output.\n");
+            return 1;
+        }
+        printf("PACK ok (temporary: just copied input -> output)\n");
         return 0;
     }
 
     if (args.cmd == CMD_UNPACK) {
-        printf("UNPACK (not implemented yet)\n");
-        printf("  input : %s\n", args.input_path);
-        printf("  output: %s\n", args.output_path);
+        if (!copy_file_binary(args.input_path, args.output_path)) {
+            fprintf(stderr, "UNPACK failed: could not write output.\n");
+            return 1;
+        }
+        printf("UNPACK ok (temporary: just copied input -> output)\n");
         return 0;
     }
 

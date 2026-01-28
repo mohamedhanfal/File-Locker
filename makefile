@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -O2 -Iinclude
 TARGET = build/filelocker.exe
 
-SRCS = src/main.c src/cli.c
+SRCS = src/main.c src/cli.c src/file_io.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(TARGET)
