@@ -1,6 +1,8 @@
 #ifndef CLI_H
 #define CLI_H
 
+#include <stddef.h>
+
 typedef struct {
     const char *command;        // "pack" or "unlock"
     const char *input_file;
