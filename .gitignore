@@ -1,0 +1,30 @@
+# Build outputs
+*.o
+*.a
+*.so
+*.exe
+*.dll
+*.dylib
+build/
+dist/
+*.out
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-workspace
+
+# OS-specific
+.DS_Store
+.Thumbs.db
