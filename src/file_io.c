@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "../include/file_io.h"
+
+void* read_file_all(const char *filename, size_t *out_size) {
+    if (!filename || !out_size) return NULL;
+
+    FILE *f = fopen(filename, "rb");
+    if (!f) {
+        perror("fopen");
+        return NULL;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    if (size < 0) {
+        fclose(f);
+        return NULL;
+    }
+
+    void *data = malloc(size);
+    if (!data) {
+        fclose(f);
+        return NULL;
+    }
+
+    size_t n = fread(data, 1, size, f);
+    fclose(f);
+
+    if (n != (size_t)size) {
+        free(data);
+        return NULL;
+    }
+
+    *out_size = size;
+    return data;
+}
+
+int write_file_all(const char *filename, const void *data, size_t size) {
+    if (!filename || !data) return 0;
+
+    FILE *f = fopen(filename, "wb");
+    if (!f) {
+        perror("fopen");
+        return 0;
+    }
+
+    size_t n = fwrite(data, 1, size, f);
+    fclose(f);
+
+    return n == size;
+}
+
+int copy_file_binary(const char *src, const char *dst) {
+    if (!src || !dst) return 0;
+
+    FILE *in = fopen(src, "rb");
+    if (!in) {
+        perror("fopen (input)");
+        return 0;
+    }
+
+    FILE *out = fopen(dst, "wb");
+    if (!out) {
+        perror("fopen (output)");
+        fclose(in);
+        return 0;
+    }
+
+    unsigned char buf[65536];
+    size_t n;
+    while ((n = fread(buf, 1, sizeof(buf), in)) > 0) {
+        if (fwrite(buf, 1, n, out) != n) {
+            perror("fwrite");
+            fclose(in);
+            fclose(out);
+            return 0;
+        }
+    }
+
+    fclose(in);
+    fclose(out);
+    return 1;
+}
