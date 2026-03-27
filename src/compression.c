@@ -8,11 +8,18 @@ size_t compress_bound(size_t original_size) {
 size_t compress_buffer(const unsigned char *original, size_t original_size,
                        unsigned char **compressed_out) {
     /* TODO: Implement miniz compression */
+    (void)original;
+    (void)original_size;
+    (void)compressed_out;
     return 0;
 }
 
 size_t decompress_buffer(const unsigned char *compressed, size_t compressed_size,
                          size_t original_size, unsigned char **decompressed_out) {
     /* TODO: Implement miniz decompression */
+    (void)compressed;
+    (void)compressed_size;
+    (void)original_size;
+    (void)decompressed_out;
     return 0;
 }
