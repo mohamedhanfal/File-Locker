@@ -20,7 +20,6 @@ dist/
 Thumbs.db
 
 # IDE and editor files
-.vscode/
 .idea/
 *.code-workspace
 *.sublime-workspace
