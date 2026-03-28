@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include "../include/cli.h"
 #include "../include/compression.h"
 #include "../include/container.h"
@@ -47,6 +48,12 @@ static int run_unlock(const CLIArgs *args, const unsigned char *password, size_t
     }
 
     decrypt_xor(payload, payload_size, password, pwd_len);
+
+    if (original_size > (uint64_t)SIZE_MAX) {
+        fprintf(stderr, "Container original size is too large for this build\n");
+        free(payload);
+        return 1;
+    }
 
     unsigned char *decompressed = NULL;
     size_t out_size = decompress_buffer(payload, payload_size, (size_t)original_size, &decompressed);

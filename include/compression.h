@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-/* Compress buffer using miniz (zlib-compatible) */
+/* Compress buffer using zlib */
 /* Returns compressed size, or 0 on failure */
 size_t compress_buffer(const unsigned char *original, size_t original_size,
                        unsigned char **compressed_out);

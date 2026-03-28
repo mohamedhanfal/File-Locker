@@ -20,7 +20,13 @@ void* read_file_all(const char *filename, size_t *out_size) {
         return NULL;
     }
 
-    void *data = malloc(size);
+    if (size == 0) {
+        *out_size = 0;
+        fclose(f);
+        return malloc(1);
+    }
+
+    void *data = malloc((size_t)size);
     if (!data) {
         fclose(f);
         return NULL;
@@ -34,12 +40,12 @@ void* read_file_all(const char *filename, size_t *out_size) {
         return NULL;
     }
 
-    *out_size = size;
+    *out_size = (size_t)size;
     return data;
 }
 
 int write_file_all(const char *filename, const void *data, size_t size) {
-    if (!filename || !data) return 0;
+    if (!filename || (!data && size > 0)) return 0;
 
     FILE *f = fopen(filename, "wb");
     if (!f) {
