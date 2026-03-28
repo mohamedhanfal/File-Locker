@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/file_io.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 void* read_file_all(const char *filename, size_t *out_size) {
     if (!filename || !out_size) return NULL;
@@ -57,6 +60,27 @@ int write_file_all(const char *filename, const void *data, size_t size) {
     fclose(f);
 
     return n == size;
+}
+
+int set_file_hidden(const char *filename) {
+    if (!filename) return 0;
+
+#ifdef _WIN32
+    DWORD attrs = GetFileAttributesA(filename);
+    if (attrs == INVALID_FILE_ATTRIBUTES) {
+        fprintf(stderr, "Warning: Could not get file attributes for %s\n", filename);
+        return 0;
+    }
+
+    if (!SetFileAttributesA(filename, attrs | FILE_ATTRIBUTE_HIDDEN)) {
+        fprintf(stderr, "Warning: Could not set file hidden attribute for %s\n", filename);
+        return 0;
+    }
+    return 1;
+#else
+    (void)filename;  /* Suppress unused parameter warning on Unix */
+    return 1;  /* No-op on Unix systems */
+#endif
 }
 
 int copy_file_binary(const char *src, const char *dst) {

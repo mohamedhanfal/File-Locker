@@ -33,6 +33,10 @@ static int run_pack(const CLIArgs *args, const unsigned char *password, size_t p
     }
 
     free(compressed);
+    
+    /* Hide the lock file on Windows */
+    set_file_hidden(args->output_file);
+    
     printf("Packed successfully: %s -> %s\n", args->input_file, args->output_file);
     return 0;
 }
