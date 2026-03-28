@@ -1,0 +1,1 @@
+"Hello, this is a test file for Phase 4 compression!" | Out-File -FilePath tests/test.txt -Encoding UTF8
