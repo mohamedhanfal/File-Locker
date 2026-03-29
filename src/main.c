@@ -8,7 +8,7 @@
 #include "../include/encryption.h"
 #include "../include/file_io.h"
 
-static int run_pack(const CLIArgs *args, const unsigned char *password, size_t pwd_len) {
+static int run_lock(const CLIArgs *args, const unsigned char *password, size_t pwd_len) {
     size_t input_size = 0;
     unsigned char *data = (unsigned char *)read_file_all(args->input_file, &input_size);
     if (!data) {
@@ -37,7 +37,7 @@ static int run_pack(const CLIArgs *args, const unsigned char *password, size_t p
     /* Hide the lock file on Windows */
     set_file_hidden(args->output_file);
     
-    printf("Packed successfully: %s -> %s\n", args->input_file, args->output_file);
+    printf("locked successfully: %s -> %s\n", args->input_file, args->output_file);
     return 0;
 }
 
@@ -80,18 +80,18 @@ static int run_unlock(const CLIArgs *args, const unsigned char *password, size_t
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        fprintf(stderr, "Usage: %s pack <input_file> <locker_file>\n", argv[0]);
+        fprintf(stderr, "Usage: %s lock <input_file> <locker_file>\n", argv[0]);
         fprintf(stderr, "       %s unlock <locker_file> <output_file>\n", argv[0]);
         return 1;
     }
 
     if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
-        printf("File Locker (Phase 4)\n");
+        printf("---- File Locker Help ----\n");
         printf("Commands:\n");
-        printf("  %s pack <input_file> <locker_file>\n", argv[0]);
+        printf("  %s lock <input_file> <locker_file>\n", argv[0]);
         printf("  %s unlock <locker_file> <output_file>\n", argv[0]);
         printf("Pipeline:\n");
-        printf("  pack   = compress -> encrypt -> container\n");
+        printf("  lock   = compress -> encrypt -> container\n");
         printf("  unlock = container -> decrypt -> decompress\n");
         printf("Password is always requested interactively.\n");
         return 0;
@@ -115,8 +115,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    if (strcmp(args.command, "pack") == 0) {
-        return run_pack(&args, (const unsigned char *)password, pwd_len);
+    if (strcmp(args.command, "lock") == 0) {
+        return run_lock(&args, (const unsigned char *)password, pwd_len);
     }
 
     return run_unlock(&args, (const unsigned char *)password, pwd_len);

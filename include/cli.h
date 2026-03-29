@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 typedef struct {
-    const char *command;        // "pack" or "unlock"
+    const char *command;        // "lock" or "unlock"
     const char *input_file;
     const char *output_file;
     int use_password;           // 0 = prompt, 1 = provided (not used in interactive mode)

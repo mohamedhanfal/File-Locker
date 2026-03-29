@@ -19,7 +19,7 @@ int parse_cli_args(int argc, char *argv[], CLIArgs *args) {
     args->use_password = 0;
     args->password = NULL;
 
-    if (strcmp(args->command, "pack") != 0 && strcmp(args->command, "unlock") != 0) {
+    if (strcmp(args->command, "lock") != 0 && strcmp(args->command, "unlock") != 0) {
         return 0;
     }
 
