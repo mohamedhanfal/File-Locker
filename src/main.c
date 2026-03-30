@@ -80,16 +80,16 @@ static int run_unlock(const CLIArgs *args, const unsigned char *password, size_t
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        fprintf(stderr, "Usage: filelocker lock <input_file> <locker_file>\n", argv[0]);
-        fprintf(stderr, "       filelocker unlock <locker_file> <output_file>\n", argv[0]);
+        fprintf(stderr, "Usage: filelocker lock <input_file> <locker_file>\n");
+        fprintf(stderr, "       filelocker unlock <locker_file> <output_file>\n");
         return 1;
     }
 
     if (strcmp(argv[1], "--help") == 0 || strcmp(argv[1], "-h") == 0) {
         printf("---- File Locker Help ----\n");
         printf("Commands:\n");
-        printf("  filelocker lock <input_file> <locker_file>\n", argv[0]);
-        printf("  filelocker unlock <locker_file> <output_file>\n", argv[0]);
+        printf("  filelocker lock <input_file> <locker_file>\n");
+        printf("  filelocker unlock <locker_file> <output_file>\n");
         printf("Pipeline:\n");
         printf("  lock   = compress -> encrypt -> container\n");
         printf("  unlock = container -> decrypt -> decompress\n");
