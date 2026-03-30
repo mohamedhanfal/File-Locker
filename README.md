@@ -81,15 +81,15 @@ if ($userPath -notlike "*$buildPath*") {
     [Environment]::SetEnvironmentVariable("Path", "$userPath;$buildPath", "User")
 }
 $env:Path += ";$buildPath"
-filelocker.exe --help
+filelocker --help
 ```
 
 ## Usage
 
 ```powershell
-.\build\filelocker.exe --help
-.\build\filelocker.exe lock <input_file> <locker_file>
-.\build\filelocker.exe unlock <locker_file> <output_file>
+filelocker --help
+filelocker lock <input_file> <locker_file>
+filelocker unlock <locker_file> <output_file>
 ```
 
 ## Portability Notes
