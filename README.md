@@ -1,21 +1,20 @@
 # File Locker
 
-Simple C CLI tool to lock and unlock files.
+Simple C command-line tool to lock and unlock files.
 
 Pipeline:
 
 - lock = compress -> encrypt -> container
 - unlock = container -> decrypt -> decompress
 
-## Requirements
+## Windows Setup (MSYS2 -> PowerShell)
 
-- C compiler (GCC/Clang)
-- GNU Make
-- zlib (`-lz`)
+This is the recommended workflow:
 
-## Quick Start (Copy-Paste)
+1. Install dependencies in MSYS2 UCRT64.
+2. Build and run from PowerShell.
 
-### Windows (MSYS2 + UCRT64)
+### 1) Install dependencies in MSYS2 UCRT64
 
 Install MSYS2 (PowerShell):
 
@@ -23,59 +22,54 @@ Install MSYS2 (PowerShell):
 winget install -e --id MSYS2.MSYS2
 ```
 
-Open **MSYS2 UCRT64** terminal, then run:
+Open MSYS2 UCRT64 terminal and run:
 
 ```bash
 pacman -Syu --noconfirm
-pacman -S --needed --noconfirm mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-zlib make git
-git clone https://github.com/mohamedhanfal/File-Locker.git
-cd File-Locker
-make clean
-make
-./build/filelocker.exe --help
+pacman -S --needed --noconfirm mingw-w64-ucrt-x86_64-toolchain mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-zlib git
 ```
 
-### Ubuntu/Debian Linux
+### 2) Build from PowerShell
 
-```bash
-sudo apt update
-sudo apt install -y build-essential make zlib1g-dev git
+Clone and enter project:
+
+```powershell
 git clone https://github.com/mohamedhanfal/File-Locker.git
 cd File-Locker
-make clean
-make
-./build/filelocker --help
 ```
 
-### macOS (Homebrew)
+Add UCRT64 tools to PATH (user PATH + current shell):
 
-```bash
-xcode-select --install
-brew install make gcc zlib git
-git clone https://github.com/mohamedhanfal/File-Locker.git
-cd File-Locker
-make clean
-make
-./build/filelocker --help
+```powershell
+$msysBin = "C:\msys64\ucrt64\bin"
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($userPath -notlike "*$msysBin*") {
+    [Environment]::SetEnvironmentVariable("Path", "$userPath;$msysBin", "User")
+}
+$env:Path += ";$msysBin"
 ```
 
-## Build
+Verify tools:
 
-```bash
-make clean
-make
+```powershell
+gcc --version
+mingw32-make --version
+```
+
+Build:
+
+```powershell
+mingw32-make clean
+mingw32-make
 ```
 
 Output:
 
 ```text
-build/filelocker.exe (Windows)
-build/filelocker (Linux/macOS)
+build/filelocker.exe
 ```
 
 ## Usage
-
-Windows:
 
 ```powershell
 .\build\filelocker.exe --help
@@ -83,81 +77,32 @@ Windows:
 .\build\filelocker.exe unlock <locker_file> <output_file>
 ```
 
-Linux/macOS:
+## Optional: Add File Locker to PATH
 
-```bash
-./build/filelocker --help
-./build/filelocker lock <input_file> <locker_file>
-./build/filelocker unlock <locker_file> <output_file>
-```
-
-## Add File Locker To PATH
-
-After building, you can add the `build` folder to PATH so `filelocker` works from any directory.
-
-Windows (PowerShell):
+From project root:
 
 ```powershell
-# from project root
 $buildPath = (Resolve-Path .\build).Path
 $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($userPath -notlike "*$buildPath*") {
-	[Environment]::SetEnvironmentVariable("Path", "$userPath;$buildPath", "User")
+    [Environment]::SetEnvironmentVariable("Path", "$userPath;$buildPath", "User")
 }
-
-# current shell only (open a new terminal for the permanent change)
 $env:Path += ";$buildPath"
 filelocker.exe --help
 ```
 
-Linux (bash):
+## Portability Notes
 
-```bash
-# from project root
-echo 'export PATH="$PATH:'"$PWD"'/build"' >> ~/.bashrc
-source ~/.bashrc
-filelocker --help
-```
+- Source code is portable. Build artifacts are machine-specific.
+- Windows zlib is linked statically in current Makefile to avoid missing zlib.dll.
+- If another PC still fails to run, update Microsoft Universal C Runtime (UCRT) via Windows Update.
 
-macOS (zsh default):
+## Other OS
 
-```bash
-# from project root
-echo 'export PATH="$PATH:'"$PWD"'/build"' >> ~/.zshrc
-source ~/.zshrc
-filelocker --help
-```
+Yes, this project can be built on Linux and macOS with GCC/Clang, Make, and zlib installed.
 
-## OS Portability (Windows)
+## Security Note
 
-This project is intended to be portable across Windows systems by sharing source code, not compiled binaries.
-
-What is portable:
-
-- `src/`, `include/`, `Makefile`, and project config
-
-What is not portable:
-
-- Files in `build/` (machine/toolchain-specific artifacts)
-
-Also portable to Linux and macOS with GCC/Clang, Make, and zlib installed.
-
-## Notes
-
-- Output `.lock` files are marked hidden on Windows.
-- Current encryption is XOR and is not secure for production use.
-
-## Troubleshooting
-
-- Error: "The code execution cannot proceed because zlib.dll was not found"
-	- Fixed in current Makefile by static-linking zlib on Windows.
-	- Rebuild with:
-
-```bash
-make clean
-make
-```
-
-- If another Windows PC still fails to run, install/update Microsoft Universal C Runtime (UCRT) using Windows Update.
+Current encryption is XOR. This is suitable for learning, not production security.
 
 Repository: https://github.com/mohamedhanfal/File-Locker.git
