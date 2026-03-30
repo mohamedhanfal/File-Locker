@@ -91,6 +91,43 @@ Linux/macOS:
 ./build/filelocker unlock <locker_file> <output_file>
 ```
 
+## Add File Locker To PATH
+
+After building, you can add the `build` folder to PATH so `filelocker` works from any directory.
+
+Windows (PowerShell):
+
+```powershell
+# from project root
+$buildPath = (Resolve-Path .\build).Path
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($userPath -notlike "*$buildPath*") {
+	[Environment]::SetEnvironmentVariable("Path", "$userPath;$buildPath", "User")
+}
+
+# current shell only (open a new terminal for the permanent change)
+$env:Path += ";$buildPath"
+filelocker.exe --help
+```
+
+Linux (bash):
+
+```bash
+# from project root
+echo 'export PATH="$PATH:'"$PWD"'/build"' >> ~/.bashrc
+source ~/.bashrc
+filelocker --help
+```
+
+macOS (zsh default):
+
+```bash
+# from project root
+echo 'export PATH="$PATH:'"$PWD"'/build"' >> ~/.zshrc
+source ~/.zshrc
+filelocker --help
+```
+
 ## OS Portability (Windows)
 
 This project is intended to be portable across Windows systems by sharing source code, not compiled binaries.
