@@ -6,6 +6,7 @@ CFLAGS = -Wall -Wextra -O2 -std=c11
 DEBUG_FLAGS = -g -O0 -DDEBUG
 
 ifeq ($(OS),Windows_NT)
+SHELL := cmd
 LDFLAGS = -Wl,-Bstatic -lz -Wl,-Bdynamic -static-libgcc
 else
 LDFLAGS = -lz
@@ -41,25 +42,45 @@ $(TARGET): $(OBJECTS) | $(BIN_DIR)
 > $(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 > @echo [SUCCESS] Build complete: $(TARGET)
 
+ifeq ($(OS),Windows_NT)
+# Create build directory (cmd.exe compatible)
+$(BIN_DIR):
+> @if not exist "$(BIN_DIR)" mkdir "$(BIN_DIR)"
+
+# Compile object files (cmd.exe compatible)
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+> @echo [CC] Compiling $<
+> @if not exist "$(dir $@)" mkdir "$(dir $@)"
+> $(CC) $(CFLAGS) -c $< -o $@
+else
 # Create build directory
 $(BIN_DIR):
-> @mkdir -p $(BIN_DIR) 2>nul || true
+> @mkdir -p $(BIN_DIR)
 
 # Compile object files
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 > @echo [CC] Compiling $<
-> @mkdir -p $(dir $@) 2>nul || true
+> @mkdir -p $(dir $@)
 > $(CC) $(CFLAGS) -c $< -o $@
+endif
 
 # Debug build (with symbols)
 debug: CFLAGS += $(DEBUG_FLAGS)
 debug: clean all
 
 # Clean build outputs
+ifeq ($(OS),Windows_NT)
 clean:
 > @echo [CLEAN] Removing build artifacts
-> @rm -rf $(OBJ_DIR)/src $(OBJ_DIR)/lib $(TARGET) 2>nul || true
+> @if exist "$(OBJ_DIR)" rmdir /s /q "$(OBJ_DIR)"
+> @if exist "$(TARGET)" del /q "$(TARGET)"
 > @echo [CLEAN] Done
+else
+clean:
+> @echo [CLEAN] Removing build artifacts
+> @rm -rf $(OBJ_DIR) $(TARGET)
+> @echo [CLEAN] Done
+endif
 
 # Full rebuild
 rebuild: clean all
