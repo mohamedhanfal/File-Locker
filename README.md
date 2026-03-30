@@ -23,6 +23,12 @@ Install MSYS2 (PowerShell):
 winget install -e --id MSYS2.MSYS2
 ```
 
+Optional: Install Git for Windows (PowerShell):
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
 Open MSYS2 UCRT64 terminal and run:
 
 ```bash
