@@ -147,4 +147,17 @@ Also portable to Linux and macOS with GCC/Clang, Make, and zlib installed.
 - Output `.lock` files are marked hidden on Windows.
 - Current encryption is XOR and is not secure for production use.
 
+## Troubleshooting
+
+- Error: "The code execution cannot proceed because zlib.dll was not found"
+	- Fixed in current Makefile by static-linking zlib on Windows.
+	- Rebuild with:
+
+```bash
+make clean
+make
+```
+
+- If another Windows PC still fails to run, install/update Microsoft Universal C Runtime (UCRT) using Windows Update.
+
 Repository: https://github.com/mohamedhanfal/File-Locker.git

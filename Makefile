@@ -1,18 +1,15 @@
 # Makefile for File Locker (Windows/MinGW)
 .RECIPEPREFIX := >
 
-ifeq ($(OS),Windows_NT)
-NULLDEV = nul
-EXE_EXT = .exe
-else
-NULLDEV = /dev/null
-EXE_EXT =
-endif
-
 CC = gcc
 CFLAGS = -Wall -Wextra -O2 -std=c11
 DEBUG_FLAGS = -g -O0 -DDEBUG
+
+ifeq ($(OS),Windows_NT)
+LDFLAGS = -Wl,-Bstatic -lz -Wl,-Bdynamic -static-libgcc
+else
 LDFLAGS = -lz
+endif
 
 # Directories
 SRC_DIR = src
@@ -30,7 +27,7 @@ SOURCES = $(SRC_DIR)/main.c \
           $(SRC_DIR)/encryption.c
 
 OBJECTS = $(SOURCES:%.c=$(OBJ_DIR)/%.o)
-TARGET = $(BIN_DIR)/filelocker$(EXE_EXT)
+TARGET = $(BIN_DIR)/filelocker.exe
 
 # Phony targets
 .PHONY: all clean rebuild debug help
@@ -46,12 +43,12 @@ $(TARGET): $(OBJECTS) | $(BIN_DIR)
 
 # Create build directory
 $(BIN_DIR):
-> @mkdir -p $(BIN_DIR) 2>$(NULLDEV) || true
+> @mkdir -p $(BIN_DIR) 2>nul || true
 
 # Compile object files
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 > @echo [CC] Compiling $<
-> @mkdir -p $(dir $@) 2>$(NULLDEV) || true
+> @mkdir -p $(dir $@) 2>nul || true
 > $(CC) $(CFLAGS) -c $< -o $@
 
 # Debug build (with symbols)
@@ -61,7 +58,7 @@ debug: clean all
 # Clean build outputs
 clean:
 > @echo [CLEAN] Removing build artifacts
-> @rm -rf $(OBJ_DIR)/src $(OBJ_DIR)/lib $(TARGET) 2>$(NULLDEV) || true
+> @rm -rf $(OBJ_DIR)/src $(OBJ_DIR)/lib $(TARGET) 2>nul || true
 > @echo [CLEAN] Done
 
 # Full rebuild
@@ -70,7 +67,7 @@ rebuild: clean all
 # Help
 help:
 > @echo "File Locker Build System"
-> @echo "  make          - Build filelocker$(EXE_EXT)"
+> @echo "  make          - Build filelocker.exe"
 > @echo "  make debug    - Build with debug symbols"
 > @echo "  make clean    - Remove build artifacts"
 > @echo "  make rebuild  - Clean then build"
