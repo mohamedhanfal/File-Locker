@@ -13,6 +13,7 @@ This is the recommended workflow:
 
 1. Install dependencies in MSYS2 UCRT64.
 2. Build and run from PowerShell.
+3. Add File Locker build path to PATH.
 
 ### 1) Install dependencies in MSYS2 UCRT64
 
@@ -69,15 +70,7 @@ Output:
 build/filelocker.exe
 ```
 
-## Usage
-
-```powershell
-.\build\filelocker.exe --help
-.\build\filelocker.exe lock <input_file> <locker_file>
-.\build\filelocker.exe unlock <locker_file> <output_file>
-```
-
-## Optional: Add File Locker to PATH
+### 3) Add build path to PATH (PowerShell)
 
 From project root:
 
@@ -89,6 +82,14 @@ if ($userPath -notlike "*$buildPath*") {
 }
 $env:Path += ";$buildPath"
 filelocker.exe --help
+```
+
+## Usage
+
+```powershell
+.\build\filelocker.exe --help
+.\build\filelocker.exe lock <input_file> <locker_file>
+.\build\filelocker.exe unlock <locker_file> <output_file>
 ```
 
 ## Portability Notes
